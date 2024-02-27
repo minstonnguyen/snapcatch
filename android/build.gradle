@@ -1,0 +1,34 @@
+buildscript {
+    ext {
+        buildToolsVersion = "34.0.0"
+        minSdkVersion = 24
+        compileSdkVersion = 34
+        targetSdkVersion = 34
+        ndkVersion = "25.1.8937393"
+        kotlinVersion = "1.8.0"
+    }
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath("com.android.tools.build:gradle:4.1.1")
+        classpath("com.facebook.react:react-native-gradle-plugin")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin")
+
+        implementation fileTree(dir: "libs", include: ["*.jar"])
+        //noinspection GradleDynamicVersion
+
+        implementation "com.facebook.react:react-native:+"  // From node_modules
+
+        // Add these lines
+        implementation project(':gvr_common')
+        implementation project(':arcore_client')
+        implementation project(path: ':react_viro')
+        implementation project(path: ':viro_renderer')
+        implementation 'com.google.android.exoplayer:exoplayer:2.19.1'
+        implementation 'com.google.protobuf.nano:protobuf-javanano:3.1.0'
+        }
+}
+
+apply plugin: "com.facebook.react.rootproject"
