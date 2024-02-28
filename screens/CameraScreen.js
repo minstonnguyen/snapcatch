@@ -5,8 +5,12 @@ import { Camera } from 'expo-camera';
 import * as MediaLibrary from 'expo-media-library';
 import { MaterialIcons } from '@expo/vector-icons';
 import Button from '../components/Button';
+import BottomBar from '../components/BottomBar';
+import { Permissions } from 'expo';
 
 class CameraScreen extends Component {
+
+  
   constructor(props) {
     super(props);
     this.state = {
@@ -19,9 +23,19 @@ class CameraScreen extends Component {
   }
 
   async componentDidMount() {
-    MediaLibrary.requestPermissionsAsync();
-    const cameraStatus = await Camera.requestCameraPermissionsAsync();
-    this.setState({ hasCameraPermission: cameraStatus.status === 'granted' });
+    try{
+      const { status: cameraStatus } = await Permissions.askAsync(Permissions.CAMERA);
+      const { status: mediaLibraryStatus } = await Permissions.askAsync(Permissions.MEDIA_LIBRARY);
+
+      this.setState({
+        hasCameraPermission: cameraStatus === 'granted',
+        hasMediaLibraryPermission: mediaLibraryStatus === 'granted',
+      });
+  }
+    catch (error) {
+      console.error(error); // Log the error for debugging purposes
+      // Handle the error or simply ignore it if it's not critical
+    }
   }
 
   takePicture = async () => {
@@ -70,33 +84,10 @@ class CameraScreen extends Component {
               style={{
                 flexDirection: 'row',
                 justifyContent: 'space-between',
-                paddingHorizontal: 30,
+                paddingHorizontal: 10,
               }}
             >
-              <Button
-                title=""
-                icon="retweet"
-                onPress={() => {
-                  this.setState({
-                    type:
-                      type === Camera.Constants.Type.back
-                        ? Camera.Constants.Type.front
-                        : Camera.Constants.Type.back,
-                  });
-                }}
-              />
-              <Button
-                onPress={() =>
-                  this.setState({
-                    flash:
-                      flash === Camera.Constants.FlashMode.off
-                        ? Camera.Constants.FlashMode.on
-                        : Camera.Constants.FlashMode.off,
-                  })
-                }
-                icon="flash"
-                color={flash === Camera.Constants.FlashMode.off ? 'gray' : '#fff'}
-              />
+
             </View>
           </Camera>
         ) : (
@@ -120,11 +111,15 @@ class CameraScreen extends Component {
               <Button title="Save" onPress={this.savePicture} icon="check" />
             </View>
           ) : (
-            <Button
-              title="Take a picture"
-              onPress={this.takePicture}
-              icon="camera"
-            />
+            <View >
+              <Button
+                title="Take a picture"
+                onPress={this.takePicture}
+                icon="camera"
+              />
+              <BottomBar />
+            </View>
+
           )}
         </View>
       </View>
@@ -138,10 +133,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingTop: Constants.statusBarHeight,
     backgroundColor: '#000',
-    padding: 8,
+    padding: 10,
   },
   controls: {
     flex: 0.5,
+    paddingBottom: 8
   },
   camera: {
     flex: 5,

@@ -15,7 +15,7 @@ const LoginScreen = ({ navigation }) => {
 
 
   const handleSignIn = async() => {
-    navigation.navigate('CameraScreen')
+    navigation.navigate('Dashboard')
     /*
     try {
       setIsLoading(true);

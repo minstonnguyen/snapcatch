@@ -1,4 +1,13 @@
 {
   "name": "FishLogger",
-  "displayName": "FishLogger"
+  "displayName": "FishLogger",
+  "expo": {
+    "android": {
+      "permissions": [
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
+      ]
+    }
+  }
 }
